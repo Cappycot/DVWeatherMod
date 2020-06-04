@@ -1,0 +1,7 @@
+{
+    "Id": "DVWeatherMod",
+    "DisplayName": "Weather",
+    "Author": "Cappycot",
+    "Version": "0.1.0",
+    "EntryMethod": "DVWeatherMod.Main.Load"
+}
