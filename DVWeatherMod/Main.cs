@@ -7,20 +7,27 @@ namespace DVWeatherMod
     {
 
         private static UnityModManager.ModEntry mod;
+        private static bool rainActive;
         private static AssetBundle assetBundle;
         private static GameObject rainPrefab;
         private static GameObject rain;
         private static GameObject locoCollider;
+        private static AudioClip rainSFX;
+        private static AudioClip defaultSFX;
+        private static AudioSource env_birds;
+        private static bool switchedAudio;
         private static Shader customSurfaceShader;
         private static Shader legacyAlphaBlended;
 
         static bool Load(UnityModManager.ModEntry modEntry)
         {
             mod = modEntry;
+            mod.OnToggle = OnToggle;
             mod.OnUpdate = OnUpdate;
             assetBundle = AssetBundle.LoadFromFile(mod.Path + "Resources/rain");
             rainPrefab = assetBundle.LoadAsset<GameObject>("Assets/Particle Effects/Rain/Rain.prefab");
             customSurfaceShader = assetBundle.LoadAsset<Shader>("Assets/EffectExamples/Shared/Shaders/SurfaceShader_VC.shader");
+            rainSFX = assetBundle.LoadAsset<AudioClip>("Assets/Particle Effects/Rain/RainSFX.ogg");
             legacyAlphaBlended = Shader.Find("Legacy Shaders/Particles/Alpha Blended");
             if (customSurfaceShader == null)
             {
@@ -32,6 +39,15 @@ namespace DVWeatherMod
                 mod.Logger.Log("Could not find Legacy Alpha Blended shader");
                 return false;
             }
+            else if (rainSFX == null)
+            {
+                mod.Logger.Log("Could not find RainSFX AudioClip");
+                return false;
+            }
+
+            killedSun = false;
+            rainActive = true;
+            switchedAudio = false;
 
             return true;
         }
@@ -49,9 +65,28 @@ namespace DVWeatherMod
                 r.material = m;
         }
 
+        // TODO: This is still probably glitchy.
+        static bool OnToggle(UnityModManager.ModEntry _, bool active)
+        {
+            rainActive = active;
+            if (killedSun)
+            {
+                Light light2 = GameObject.Find("Directional Light")?.GetComponent<Light>();
+                if (!light2)
+                {
+                    return false;
+                }
+                light2.gameObject.SetActive(true);
+                killedSun = false;
+            }
+            if (rain != null)
+                rain.SetActive(active);
+            return true;
+        }
+
         static void OnUpdate(UnityModManager.ModEntry modEntry, float delta)
         {
-            if (rain == null)
+            if (rain == null && rainActive)
             {
                 if (!killedSun)
                 {
@@ -63,6 +98,7 @@ namespace DVWeatherMod
                     }
                     light2.gameObject.SetActive(false);
                     killedSun = true;
+                    return; // Make rain in next frame.
                 }
                 else
                 {
@@ -81,12 +117,25 @@ namespace DVWeatherMod
                     mod.Logger.Log("Successfully switched out materials.");
                 }
             }
+            else if (!switchedAudio && rainActive)
+            {
+                env_birds = GameObject.Find("env_birds Audio Source")?.GetComponent<AudioSource>();
+                if (env_birds == null)
+                    return;
+                if (defaultSFX == null)
+                    defaultSFX = env_birds.clip;
+                env_birds.clip = rainSFX;
+                env_birds.volume = 1f;
+                env_birds.Play();
+                switchedAudio = true;
+            }
 
-            if (PlayerManager.PlayerTransform == null)
+            if (PlayerManager.PlayerTransform == null || !rainActive)
                 return;
 
             rain.transform.position = PlayerManager.PlayerTransform.position;
             // Hope this isn't too costly.
+            // TODO: Set up hitboxes for each loco interior.
             locoCollider.SetActive(PlayerManager.Car != null && PlayerManager.Car.IsLoco);
         }
     }
