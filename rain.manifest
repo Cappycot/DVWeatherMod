@@ -1,0 +1,50 @@
+ManifestFileVersion: 0
+CRC: 3568167978
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 9f970f85e38c28e54981ce2df1b5519b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 6c562435677fc4f738cc282a01b05708
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+Assets:
+- Assets/Packages/EffectExamples/FireExplosionEffects/Textures/SmokePuffNormalSheet.tif
+- Assets/Particle Effects/Rain/Materials/StormCloudParticle.mat
+- Assets/Packages/EffectExamples/Shared/Shaders/SurfaceShader_VC.shader
+- Assets/Packages/EffectExamples/WaterEffects/Models/ImpactSplash.FBX
+- Assets/Packages/EffectExamples/WaterEffects/Textures/WaterRipplesParticle.tif
+- Assets/Packages/EffectExamples/WaterEffects/Textures/ImpactSplashParticle.tif
+- Assets/Particle Effects/Rain/Rain.prefab
+- Assets/Packages/EffectExamples/WaterEffects/Materials/ImpactSplashParticle.mat
+- Assets/Packages/EffectExamples/WaterEffects/Textures/WaterDropParticle.tif
+- Assets/Packages/EffectExamples/WaterEffects/Materials/WaterDropParticle.mat
+- Assets/Particle Effects/Rain/RainSFX.ogg
+- Assets/Packages/EffectExamples/WaterEffects/Materials/WaterRipplesParticle.mat
+- Assets/Packages/EffectExamples/FireExplosionEffects/Textures/SmokePuffParticleSheet.png
+Dependencies: []
