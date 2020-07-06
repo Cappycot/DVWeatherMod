@@ -26,7 +26,7 @@ namespace DVWeatherMod
             mod.OnUpdate = OnUpdate;
             assetBundle = AssetBundle.LoadFromFile(mod.Path + "Resources/rain");
             rainPrefab = assetBundle.LoadAsset<GameObject>("Assets/Particle Effects/Rain/Rain.prefab");
-            customSurfaceShader = assetBundle.LoadAsset<Shader>("Assets/EffectExamples/Shared/Shaders/SurfaceShader_VC.shader");
+            customSurfaceShader = assetBundle.LoadAsset<Shader>("Assets/Packages/EffectExamples/Shared/Shaders/SurfaceShader_VC.shader");
             rainSFX = assetBundle.LoadAsset<AudioClip>("Assets/Particle Effects/Rain/RainSFX.ogg");
             legacyAlphaBlended = Shader.Find("Legacy Shaders/Particles/Alpha Blended");
             if (customSurfaceShader == null)
@@ -108,10 +108,12 @@ namespace DVWeatherMod
                     SwapMaterial(tf.gameObject, customSurfaceShader, false);
                     tf = rain.transform.Find("Rain");
                     SwapMaterial(tf.gameObject, legacyAlphaBlended, true);
-                    tf = tf.transform.Find("Ripple");
+                    Transform tf2 = tf.Find("Ripple");
+                    SwapMaterial(tf2.gameObject, legacyAlphaBlended, false);
+                    /*tf = tf.transform.Find("Ripple");
                     SwapMaterial(tf.gameObject, legacyAlphaBlended, false);
                     Transform tf2 = tf.Find("WaterSpray");
-                    SwapMaterial(tf2.gameObject, legacyAlphaBlended, false);
+                    SwapMaterial(tf2.gameObject, legacyAlphaBlended, false);*/
                     tf2 = tf.Find("ImpactSplash");
                     SwapMaterial(tf2.gameObject, legacyAlphaBlended, false);
                     mod.Logger.Log("Successfully switched out materials.");

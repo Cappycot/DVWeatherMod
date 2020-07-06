@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3568167978
+CRC: 842803087
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 9f970f85e38c28e54981ce2df1b5519b
+    Hash: c76d234a684bbb0b37a21cecfbc4b094
   TypeTreeHash:
     serializedVersion: 2
     Hash: 6c562435677fc4f738cc282a01b05708
@@ -39,6 +39,7 @@ Assets:
 - Assets/Packages/EffectExamples/Shared/Shaders/SurfaceShader_VC.shader
 - Assets/Packages/EffectExamples/WaterEffects/Models/ImpactSplash.FBX
 - Assets/Packages/EffectExamples/WaterEffects/Textures/WaterRipplesParticle.tif
+- Assets/Particle Effects/Rain/Textures/SmokePuffParticleSheet.png
 - Assets/Packages/EffectExamples/WaterEffects/Textures/ImpactSplashParticle.tif
 - Assets/Particle Effects/Rain/Rain.prefab
 - Assets/Packages/EffectExamples/WaterEffects/Materials/ImpactSplashParticle.mat
@@ -46,5 +47,4 @@ Assets:
 - Assets/Packages/EffectExamples/WaterEffects/Materials/WaterDropParticle.mat
 - Assets/Particle Effects/Rain/RainSFX.ogg
 - Assets/Packages/EffectExamples/WaterEffects/Materials/WaterRipplesParticle.mat
-- Assets/Packages/EffectExamples/FireExplosionEffects/Textures/SmokePuffParticleSheet.png
 Dependencies: []
