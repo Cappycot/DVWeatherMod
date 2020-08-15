@@ -1,8 +1,8 @@
 {
-    "Id": "WeatherMod",
+    "Id": "DVWeatherMod",
     "DisplayName": "Weather Effects",
     "Author": "Cappycot",
-    "Version": "0.1.2",
+    "Version": "0.2.0",
     "EntryMethod": "DVWeatherMod.Main.Load",
     "HomePage": "https://www.nexusmods.com/derailvalley/mods/116",
     "Repository": "https://raw.githubusercontent.com/Cappycot/DVWeatherMod/master/Repository.json"

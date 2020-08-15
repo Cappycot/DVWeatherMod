@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityModManagerNet;
 
 namespace DVWeatherMod
@@ -15,8 +14,12 @@ namespace DVWeatherMod
         private static GameObject locoCollider;
         private static AudioClip rainSFX;
         private static AudioClip defaultSFX;
+        private const float rainVolume = 1f;
+        private static float defaultVolume;
         private static AudioSource env_birds;
         private static bool switchedAudio;
+        private static Light sun;
+        private static bool killedSun;
         private static Shader customSurfaceShader;
         private static Shader legacyAlphaBlended;
 
@@ -47,20 +50,22 @@ namespace DVWeatherMod
             }
 
             rainActive = true;
+            killedSun = false;
             switchedAudio = false;
 
             return true;
         }
 
-        static void SwapMaterial(GameObject g, Shader s, bool trail)
+        static void SwapMaterial(GameObject g, Shader s)
         {
             Material m = new Material(s);
             ParticleSystemRenderer r = g.GetComponent<ParticleSystemRenderer>();
-            m.CopyPropertiesFromMaterial(trail ? r.trailMaterial : r.material);
-            if (trail)
-                r.trailMaterial = m;
-            else
-                r.material = m;
+            m.CopyPropertiesFromMaterial(r.material);
+            // m.CopyPropertiesFromMaterial(trail ? r.trailMaterial : r.material);
+            // if (trail)
+            // r.trailMaterial = m;
+            // else
+            r.material = m;
         }
 
         // TODO: This is still probably glitchy.
@@ -72,8 +77,11 @@ namespace DVWeatherMod
             if (switchedAudio && env_birds != null)
             {
                 env_birds.clip = active ? rainSFX : defaultSFX;
+                env_birds.volume = active ? rainVolume : defaultVolume;
                 env_birds.Play();
             }
+            if (killedSun && sun != null)
+                sun.gameObject.SetActive(!active);
             return true;
         }
 
@@ -84,17 +92,17 @@ namespace DVWeatherMod
                 rain = GameObject.Instantiate(rainPrefab);
                 locoCollider = rain.transform.Find("LocoCollider").gameObject;
                 Transform tf = rain.transform.Find("Rainclouds");
-                SwapMaterial(tf.gameObject, customSurfaceShader, false);
+                SwapMaterial(tf.gameObject, customSurfaceShader); // , false);
                 tf = rain.transform.Find("Rain");
-                SwapMaterial(tf.gameObject, legacyAlphaBlended, true);
+                SwapMaterial(tf.gameObject, legacyAlphaBlended); // , false);
                 Transform tf2 = tf.Find("Ripple");
-                SwapMaterial(tf2.gameObject, legacyAlphaBlended, false);
+                SwapMaterial(tf2.gameObject, legacyAlphaBlended); // , false);
                 /*tf = tf.transform.Find("Ripple");
                 SwapMaterial(tf.gameObject, legacyAlphaBlended, false);
                 Transform tf2 = tf.Find("WaterSpray");
                 SwapMaterial(tf2.gameObject, legacyAlphaBlended, false);*/
                 tf2 = tf.Find("ImpactSplash");
-                SwapMaterial(tf2.gameObject, legacyAlphaBlended, false);
+                SwapMaterial(tf2.gameObject, legacyAlphaBlended); // , false);
                 mod.Logger.Log("Successfully switched out materials.");
             }
             else if (!switchedAudio && rainActive)
@@ -105,9 +113,18 @@ namespace DVWeatherMod
                 if (defaultSFX == null)
                     defaultSFX = env_birds.clip;
                 env_birds.clip = rainSFX;
-                // env_birds.volume = 1f;
+                defaultVolume = env_birds.volume;
+                env_birds.volume = rainVolume;
                 env_birds.Play();
                 switchedAudio = true;
+            }
+            else if (!killedSun && rainActive)
+            {
+                sun = GameObject.Find("Directional Light")?.GetComponent<Light>();
+                if (!sun)
+                    return;
+                sun.gameObject.SetActive(false);
+                killedSun = true;
             }
 
             Transform playerTransform = PlayerManager.PlayerTransform;
@@ -115,7 +132,7 @@ namespace DVWeatherMod
                 return;
 
             // TODO: Figure out how world height works.
-            rain.transform.position = new Vector3(playerTransform.position.x, Mathf.Min(playerTransform.position.y + 100f, 250f), playerTransform.position.z);
+            rain.transform.position = new Vector3(playerTransform.position.x, playerTransform.position.y + 150f, playerTransform.position.z);
             // Hope this isn't too costly.
             // TODO: Set up hitboxes for each loco interior.
             locoCollider.SetActive(PlayerManager.Car != null && PlayerManager.Car.IsLoco);
